@@ -8,6 +8,10 @@ export default async function handler(req, res) {
   try {
     const { message } = req.body;
 
+    if (!message) {
+      return res.status(400).json({ error: "Messaggio mancante" });
+    }
+
     const client = new Groq({
       apiKey: process.env.GROQ_API_KEY
     });
@@ -17,7 +21,7 @@ export default async function handler(req, res) {
       messages: [
         {
           role: "system",
-          content: "Tu sei NEURA, l’intelligenza avanzata dell’ecosistema AutoPilot 2026. Rispondi in modo naturale, umano, preciso."
+          content: "Tu sei NEURA, l’intelligenza avanzata dell’ecosistema AutoPilot 2026."
         },
         {
           role: "user",
@@ -31,6 +35,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Errore NEURA:", error);
-    return res.status(500).json({ error: "Errore interno NEURA" });
+    return res.status(500).json({ error: error.message || "Errore interno NEURA" });
   }
 }
